@@ -1,0 +1,4 @@
+---
+# Run all tiers: ansible-playbook playbooks/site.yml
+- import_playbook: frontend.yml
+- import_playbook: backend.yml

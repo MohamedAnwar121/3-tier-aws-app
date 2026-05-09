@@ -1,0 +1,16 @@
+variable "project"             { type = string }
+variable "environment"         { type = string }
+variable "frontend_subnet_ids" { type = list(string) }
+variable "backend_subnet_ids"  { type = list(string) }
+variable "frontend_sg_id"      { type = string }
+variable "backend_sg_id"       { type = string }
+variable "frontend_tg_arn"     { type = string }
+variable "backend_tg_arn"      { type = string }
+variable "instance_type"       { type = string }
+variable "key_name"            { type = string }
+variable "ami_id"              { type = string }
+variable "frontend_min"        { type = number }
+variable "frontend_max"        { type = number }
+variable "backend_min"         { type = number }
+variable "backend_max"         { type = number }
+variable "internal_alb_dns"    { type = string }

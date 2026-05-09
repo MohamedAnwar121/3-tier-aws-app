@@ -1,0 +1,68 @@
+---
+- name: Install nginx
+  ansible.builtin.yum:
+    name: nginx
+    state: present
+
+- name: Create app directory
+  ansible.builtin.file:
+    path: /var/www/html
+    state: directory
+    owner: nginx
+    group: nginx
+    mode: '0755'
+
+- name: Deploy nginx config
+  ansible.builtin.template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    mode: '0644'
+  notify: Reload nginx
+
+- name: Install Node.js
+  ansible.builtin.yum:
+    name:
+      - nodejs
+      - npm
+    state: present
+
+- name: Create frontend source directory
+  ansible.builtin.file:
+    path: /opt/frontend-src
+    state: directory
+    owner: ec2-user
+    group: ec2-user
+    mode: '0755'
+
+- name: Copy React source code to server
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/../app/frontend/"
+    dest: /opt/frontend-src/
+    owner: ec2-user
+    group: ec2-user
+
+- name: Run npm install
+  ansible.builtin.command: npm install
+  args:
+    chdir: /opt/frontend-src
+
+- name: Run npm run build
+  ansible.builtin.command: npm run build
+  args:
+    chdir: /opt/frontend-src
+
+- name: Deploy built files to Nginx web root
+  ansible.builtin.shell: cp -r /opt/frontend-src/dist/* /var/www/html/
+
+
+- name: Enable and start nginx
+  ansible.builtin.systemd:
+    name: nginx
+    enabled: true
+    state: started
+
+handlers:
+  - name: Reload nginx
+    ansible.builtin.systemd:
+      name: nginx
+      state: reloaded

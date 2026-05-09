@@ -1,0 +1,19 @@
+---
+- name: Update all packages
+  ansible.builtin.yum:
+    name: "*"
+    state: latest
+
+- name: Install base packages
+  ansible.builtin.yum:
+    name:
+      - python3
+      - python3-pip
+      - unzip
+      - curl
+      - git
+    state: present
+
+- name: Set timezone to UTC
+  community.general.timezone:
+    name: UTC

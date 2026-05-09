@@ -1,0 +1,18 @@
+---
+# ansible-galaxy collection install amazon.aws  (required)
+plugin: amazon.aws.aws_ec2
+regions:
+  - us-east-1
+
+filters:
+  instance-state-name: running
+  tag:Project: myapp
+  tag:Environment: prod
+
+keyed_groups:
+  # Creates groups: tag_Role_frontend and tag_Role_backend
+  - key: tags.Role
+    prefix: tag_Role
+
+compose:
+  ansible_host: private_ip_address   # use private IP (via SSM or bastion)

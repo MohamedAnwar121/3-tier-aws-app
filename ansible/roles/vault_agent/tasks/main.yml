@@ -1,0 +1,54 @@
+---
+- name: Download Vault binary
+  ansible.builtin.get_url:
+    url: "https://releases.hashicorp.com/vault/1.15.4/vault_1.15.4_linux_amd64.zip"
+    dest: /tmp/vault.zip
+    mode: '0644'
+
+- name: Unzip Vault
+  ansible.builtin.unarchive:
+    src: /tmp/vault.zip
+    dest: /usr/local/bin/
+    remote_src: true
+    mode: '0755'
+
+- name: Create vault agent directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0750'
+  loop:
+    - /etc/vault-agent
+    - /run/vault-agent
+
+- name: Template vault-agent config
+  ansible.builtin.template:
+    src: vault-agent.hcl.j2
+    dest: /etc/vault-agent/agent.hcl
+    mode: '0640'
+
+- name: Install vault-agent systemd service
+  ansible.builtin.copy:
+    dest: /etc/systemd/system/vault-agent.service
+    mode: '0644'
+    content: |
+      [Unit]
+      Description=HashiCorp Vault Agent
+      After=network.target
+
+      [Service]
+      ExecStart=/usr/local/bin/vault agent -config=/etc/vault-agent/agent.hcl
+      Restart=on-failure
+      RestartSec=5
+
+      [Install]
+      WantedBy=multi-user.target
+
+- name: Enable and start vault-agent
+  ansible.builtin.systemd:
+    name: vault-agent
+    enabled: true
+    state: started
+    daemon_reload: true

@@ -1,0 +1,13 @@
+---
+- name: Configure backend servers
+  hosts: tag_Role_backend
+  become: true
+
+  vars:
+    vault_path: "secret/{{ env }}/database"
+    env: prod
+
+  roles:
+    - common
+    - vault_agent
+    - backend

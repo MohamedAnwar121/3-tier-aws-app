@@ -1,0 +1,12 @@
+---
+- name: Configure frontend servers
+  hosts: tag_Role_frontend
+  become: true
+
+  vars:
+    backend_url: "http://{{ lookup('env', 'INTERNAL_ALB_DNS') }}"
+
+  roles:
+    - common
+    - vault_agent
+    - frontend
