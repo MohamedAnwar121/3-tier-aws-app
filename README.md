@@ -88,6 +88,26 @@ export INTERNAL_ALB_DNS=$(terraform output -raw internal_alb_dns)
 
 ---
 
+## Docker Build & Push
+
+Before running Ansible, you must build and push the Docker images so that the EC2 instances can pull them.
+
+```bash
+# Build and push the Backend
+cd app/backend
+docker build -t mohamedanwar121/backend:latest .
+docker push mohamedanwar121/backend:latest
+cd ../..
+
+# Build and push the Frontend
+cd app/frontend
+docker build -t mohamedanwar121/frontend:latest .
+docker push mohamedanwar121/frontend:latest
+cd ../..
+```
+
+---
+
 ## Configure Servers (Ansible)
 
 ```bash

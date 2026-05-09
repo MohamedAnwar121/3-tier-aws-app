@@ -12,7 +12,19 @@
       - unzip
       - curl
       - git
+      - docker
     state: present
+
+- name: Enable and start Docker service
+  ansible.builtin.systemd:
+    name: docker
+    enabled: true
+    state: started
+
+- name: Install Docker python module (required for Ansible docker_container)
+  ansible.builtin.pip:
+    name: docker
+    executable: pip3
 
 - name: Set timezone to UTC
   community.general.timezone:
