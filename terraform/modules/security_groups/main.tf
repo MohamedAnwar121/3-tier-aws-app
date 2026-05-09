@@ -31,6 +31,14 @@ resource "aws_security_group" "frontend" {
     protocol        = "tcp"
     security_groups = [aws_security_group.public_alb.id]
   }
+
+  ingress {
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    security_groups = [var.bastion_sg_id] 
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -73,6 +81,14 @@ resource "aws_security_group" "backend" {
     protocol        = "tcp"
     security_groups = [aws_security_group.internal_alb.id]
   }
+
+  ingress {
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    security_groups = [var.bastion_sg_id]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0

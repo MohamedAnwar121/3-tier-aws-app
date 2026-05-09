@@ -52,25 +52,25 @@ variable "key_name" {
 variable "frontend_min" {
   description = "Frontend ASG minimum instances"
   type        = number
-  default     = 2
+  default     = 1
 }
 
 variable "frontend_max" {
   description = "Frontend ASG maximum instances"
   type        = number
-  default     = 4
+  default     = 1
 }
 
 variable "backend_min" {
   description = "Backend ASG minimum instances"
   type        = number
-  default     = 2
+  default     = 1
 }
 
 variable "backend_max" {
   description = "Backend ASG maximum instances"
   type        = number
-  default     = 4
+  default     = 1
 }
 
 variable "db_name" {

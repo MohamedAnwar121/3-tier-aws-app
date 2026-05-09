@@ -22,7 +22,7 @@ auto_auth {
 
 # Write DB credentials to a file the app can read
 template {
-  destination = "/etc/app/db.env"
+  destination = "/etc/backend/db.env"
   contents    = <<EOT
 {{ '{{' }}- with secret "secret/{{ environment }}/database" -{{ '}}' }}
 DB_HOST={{ '{{' }} .Data.data.host {{ '}}' }}

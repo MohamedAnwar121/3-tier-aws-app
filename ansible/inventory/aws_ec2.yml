@@ -16,3 +16,5 @@ keyed_groups:
 
 compose:
   ansible_host: private_ip_address   # use private IP (via SSM or bastion)
+  project: tags.Project
+  environment: tags.Environment

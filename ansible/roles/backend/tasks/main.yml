@@ -1,20 +1,18 @@
 ---
-- name: Create /etc/backend for Vault-rendered credentials
-  ansible.builtin.file:
-    path: /etc/backend
-    state: directory
-    owner: root
-    group: ec2-user
-    mode: '0750'
-
-- name: Run backend Docker container
+- name: Run backend Docker container with Vault secrets
   community.docker.docker_container:
     name: backend
-    image: "{{ backend_image | default('your-dockerhub-username/backend:latest') }}"
+    image: "{{ backend_image | default('mohamedanwar121/backend:latest') }}"
     pull: true
     state: started
     restart_policy: always
     ports:
       - "8000:8000"
-    # We pass the file that Vault Agent generated
-    env_file: /etc/backend/db.env
+    env:
+      # This pulls secrets from Vault on the fly using variables from the Bastion
+      DB_HOST: "{{ lookup('community.hashi_vault.hashi_vault', 'secret/data/' + app_env + '/database', url=lookup('env', 'VAULT_ADDR'), token=lookup('env', 'VAULT_TOKEN')).host }}"
+      DB_PORT: "{{ lookup('community.hashi_vault.hashi_vault', 'secret/data/' + app_env + '/database', url=lookup('env', 'VAULT_ADDR'), token=lookup('env', 'VAULT_TOKEN')).port }}"
+      DB_NAME: "{{ lookup('community.hashi_vault.hashi_vault', 'secret/data/' + app_env + '/database', url=lookup('env', 'VAULT_ADDR'), token=lookup('env', 'VAULT_TOKEN')).dbname }}"
+      DB_USER: "{{ lookup('community.hashi_vault.hashi_vault', 'secret/data/' + app_env + '/database', url=lookup('env', 'VAULT_ADDR'), token=lookup('env', 'VAULT_TOKEN')).username }}"
+      DB_PASS: "{{ lookup('community.hashi_vault.hashi_vault', 'secret/data/' + app_env + '/database', url=lookup('env', 'VAULT_ADDR'), token=lookup('env', 'VAULT_TOKEN')).password }}"
+  become: true

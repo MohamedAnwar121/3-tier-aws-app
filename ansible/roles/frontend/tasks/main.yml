@@ -2,7 +2,7 @@
 - name: Run frontend Docker container
   community.docker.docker_container:
     name: frontend
-    image: "{{ frontend_image | default('your-dockerhub-username/frontend:latest') }}"
+    image: "{{ frontend_image | default('mohamedanwar121/frontend:latest') }}"
     pull: true
     state: started
     restart_policy: always
@@ -11,3 +11,4 @@
     env:
       # Inject the API URL environment variable for Vite if we are grabbing it from inventory or playbooks
       VITE_API_URL: "{{ backend_url | default('http://backend:8000') }}"
+  become: true

@@ -5,8 +5,9 @@
 
   vars:
     backend_url: "http://{{ lookup('env', 'INTERNAL_ALB_DNS') }}"
+    project: myapp
+    app_env: prod
 
   roles:
     - common
-    - vault_agent
     - frontend

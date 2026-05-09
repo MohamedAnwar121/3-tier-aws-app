@@ -4,10 +4,9 @@
   become: true
 
   vars:
-    vault_path: "secret/{{ env }}/database"
-    env: prod
+    app_env: prod
+    project: myapp
 
   roles:
     - common
-    - vault_agent
     - backend

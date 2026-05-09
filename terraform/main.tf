@@ -39,6 +39,7 @@ module "security_groups" {
   environment = var.environment
   vpc_id      = module.vpc.vpc_id
   vpc_cidr    = var.vpc_cidr
+  bastion_sg_id = module.vpc.bastion_sg_id
 }
 
 module "alb" {

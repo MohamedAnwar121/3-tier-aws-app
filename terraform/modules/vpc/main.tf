@@ -106,3 +106,52 @@ resource "aws_route_table_association" "database" {
   subnet_id      = aws_subnet.database[count.index].id
   route_table_id = aws_route_table.private[count.index].id
 }
+
+# ── Bastion Host / Ansible Controller ────────────────────────────────────────
+resource "aws_security_group" "bastion_sg" {
+  name        = "${var.project}-${var.environment}-bastion-sg"
+  description = "Allow SSH inbound and all outbound"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # For Lab environments; restrict to your IP in production
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = { Name = "${var.project}-${var.environment}-bastion-sg" }
+}
+
+resource "aws_instance" "bastion" {
+  ami                         = "ami-0c101f26f147fa7fd" # Ensure this AMI is available in your region
+  instance_type               = "t2.micro"
+  subnet_id                   = aws_subnet.public[0].id # Places it in the first public subnet
+  key_name                    = "vockey"               # Your labsuser.pem key name
+  vpc_security_group_ids      = [aws_security_group.bastion_sg.id]
+  associate_public_ip_address = true
+
+  # Pre-installing Ansible so it's ready to act as a controller
+  user_data = <<-EOF
+              #!/bin/bash
+              sudo yum update -y
+              sudo amazon-linux-extras install ansible2 -y
+              sudo yum install python3-pip -y
+              pip3 install botocore boto3
+              ansible-galaxy collection install community.general
+              ansible-galaxy collection install community.hashi_vault
+              pip3 install hvac --user
+              EOF
+
+  tags = { 
+    Name = "${var.project}-${var.environment}-bastion-host",
+    Role = "ansible-controller"
+  }
+}
