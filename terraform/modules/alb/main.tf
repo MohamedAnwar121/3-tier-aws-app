@@ -15,7 +15,7 @@ resource "aws_lb_target_group" "frontend" {
   vpc_id   = var.vpc_id
 
   health_check {
-    path                = "/health"
+    path                = "/"
     interval            = 30
     healthy_threshold   = 2
     unhealthy_threshold = 3

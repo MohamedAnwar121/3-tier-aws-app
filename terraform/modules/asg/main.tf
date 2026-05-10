@@ -60,7 +60,7 @@ resource "aws_autoscaling_group" "frontend" {
   max_size            =  1 # var.frontend_max
   desired_capacity    = 1 #var.frontend_min
   target_group_arns   = [var.frontend_tg_arn]
-  health_check_type   = "ELB"
+  health_check_type   = "EC2"
   health_check_grace_period = 120
 
   launch_template {
@@ -112,7 +112,7 @@ resource "aws_autoscaling_group" "backend" {
   max_size            = 1 #var.backend_max
   desired_capacity    = 1 #var.backend_min
   target_group_arns   = [var.backend_tg_arn]
-  health_check_type   = "ELB"
+  health_check_type   = "EC2"
   health_check_grace_period = 120
 
   launch_template {

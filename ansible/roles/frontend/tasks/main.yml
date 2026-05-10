@@ -10,5 +10,6 @@
       - "80:80"
     env:
       # Inject the API URL environment variable for Vite if we are grabbing it from inventory or playbooks
-      VITE_API_URL: "{{ backend_url | default('http://backend:8000') }}"
+      # VITE_API_URL: "{{ backend_url | default('http://backend:8000') }}"
+      VITE_API_URL: "internal-myapp-prod-internal-alb-2055366401.us-east-1.elb.amazonaws.com"
   become: true

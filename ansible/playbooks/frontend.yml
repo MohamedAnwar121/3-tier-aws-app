@@ -4,7 +4,7 @@
   become: true
 
   vars:
-    backend_url: "http://{{ lookup('env', 'INTERNAL_ALB_DNS') }}"
+    backend_url: "internal-myapp-prod-internal-alb-2055366401.us-east-1.elb.amazonaws.com:80"
     project: myapp
     app_env: prod
 

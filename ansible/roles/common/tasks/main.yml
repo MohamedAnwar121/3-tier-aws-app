@@ -1,4 +1,10 @@
 ---
+# - name: Clean DNF cache
+#   ansible.builtin.command: dnf clean all
+#   become: true
+#   args:
+#     warn: false
+
 - name: Update all packages
   ansible.builtin.dnf:
     name: "*"

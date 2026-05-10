@@ -7,7 +7,7 @@
     state: started
     restart_policy: always
     ports:
-      - "8000:8000"
+      - "8080:8080"
     env:
       # This pulls secrets from Vault on the fly using variables from the Bastion
       DB_HOST: "{{ lookup('community.hashi_vault.hashi_vault', 'secret/data/' + app_env + '/database', url=lookup('env', 'VAULT_ADDR'), token=lookup('env', 'VAULT_TOKEN')).host }}"

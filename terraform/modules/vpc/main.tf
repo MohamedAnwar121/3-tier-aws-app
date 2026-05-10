@@ -148,6 +148,8 @@ resource "aws_instance" "bastion" {
               ansible-galaxy collection install community.general
               ansible-galaxy collection install community.hashi_vault
               pip3 install hvac --user
+              pip3 install --user ansible
+              pip3 install hvac
               EOF
 
   tags = { 
